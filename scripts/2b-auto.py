@@ -12,22 +12,28 @@ import signal
 import sys
 import re
 
+#fonction pour quitter proprement avec CTRL + C
 def youcant(sig, frame):
     print("\nVous avez quitté")
     sys.exit(0)
 
 signal.signal(signal.SIGINT, youcant)
 
+#fonction return la phrase de win
 def soluce(random):
  print("Le nombre a été trouvé -> ", random)
 
-regex = re.compile('[0-9]+|q')
+regex = re.compile('^([0-9])|([0-9]{2}|100)$')
 rand = randint(0, 100)
+success = False
 
+#initialisation des bornes pour le nombre random
 min = 0
 max = 100
 auto = randint(min,max)
 
+#ouverture en écriture puis lecture du fichier soluce.txt,
+#et récupère son contenu pour l'afficher
 nb = open("soluce.txt", "w")
 nb.write("**Bonjour**")
 nb = open("soluce.txt", "r")
@@ -44,9 +50,11 @@ nb.write(str(auto))
 nb = open("soluce.txt", "r")
 result = nb.read()
 
-while result:
+#boucle qui permet de rechercher le nombre random selon le contenu du fichier
+while success == False:
   if  int(result) < rand:
     min = auto
+#Les bornes de min et max rapetisse au fur et a mesure jusqu'à trouver le nombre désiré
     auto = randint(min, max)
     nb = open("soluce.txt", "w")
     nb.write(str(auto))
